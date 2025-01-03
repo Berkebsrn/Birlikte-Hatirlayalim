@@ -1,50 +1,184 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Özel Anlar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sevdiğim Kişiye Özel</title>
+    <audio id="background-music" loop>
+        <source src="your-song.mp3" type="audio/mp3">  <!-- Şarkınızın yolu buraya gelecek -->
+    </audio>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffebef;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('background-image.jpg');  /* Arka plan resmi, isteğe bağlı */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 1000px;
+        }
+
+        h1 {
+            color: #d36f6f;
+            font-size: 36px;
+        }
+
+        h2 {
+            margin-top: 30px;
+            color: #d36f6f;
+            font-size: 28px;
+        }
+
+        .messages {
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #d36f6f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #c15c5c;
+        }
+
+        textarea {
+            margin-top: 20px;
+            padding: 12px;
+            width: 80%;
+            height: 100px;
+            border-radius: 10px;
+            font-size: 16px;
+            border: 2px solid #d36f6f;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #c15c5c;
+        }
+
+        .important-dates {
+            margin-top: 20px;
+            font-size: 18px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .important-dates li {
+            margin: 10px 0;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .gallery img {
+            width: 150px;
+            height: 150px;
+            margin: 0 10px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.1);
+        }
+
+        #saved-message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #d36f6f;
+        }
+    </style>
 </head>
 <body>
-  <h2>Yeni Bir Anı Ekleyin</h2>
-  <form id="eventForm">
-    <label for="eventDate">Tarih ve Saat:</label>
-    <input type="datetime-local" id="eventDate" required><br><br>
-    
-    <label for="description">Açıklama:</label>
-    <textarea id="description" required></textarea><br><br>
-    
-    <button type="submit">Ekle</button>
-  </form>
+    <div class="container">
+        <h1>Sevgilim, Seni Seviyorum!</h1>
+        <p>Her an seninle olmak, seni mutlu etmek ve yanında olmak benim en büyük mutluluğum.</p>
+        <p>İşte sana özel bazı mesajlar:</p>
+        <div class="messages">
+            <p>❤️ Seninle her şey daha güzel.</p>
+            <p>❤️ Gözlerin, en parlak yıldızlardan bile daha güzel.</p>
+            <p>❤️ Her anım seninle anlamlı.</p>
+        </div>
 
-  <script>
-    document.getElementById("eventForm").addEventListener("submit", function(event) {
-      event.preventDefault(); // Formun normal şekilde gönderilmesini engelle
+        <h2>Önemli Tarihler</h2>
+        <div class="important-dates">
+            <ul>
+                <li><strong>İlk Tanışma:</strong> 10 Mart 2022</li>
+                <li><strong>İlk Buluşma:</strong> 15 Nisan 2022</li>
+                <li><strong>İlk "Seni Seviyorum" Söylediğimiz Gün:</strong> 1 Temmuz 2022</li>
+            </ul>
+        </div>
 
-      var eventDate = document.getElementById('eventDate').value;
-      var description = document.getElementById('description').value;
+        <h2>Görsel Galeri</h2>
+        <div class="gallery">
+            <img src="image1.jpg" alt="Fotoğraf 1">
+            <img src="image2.jpg" alt="Fotoğraf 2">
+            <img src="image3.jpg" alt="Fotoğraf 3">
+        </div>
 
-      // Backend API'ye veri gönder
-      fetch('https://your-backend-url.herokuapp.com/add_event.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          eventDate: eventDate,
-          description: description
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        alert(data.message || data.error);
-        if (data.message) {
-          document.getElementById('eventDate').value = '';
-          document.getElementById('description').value = '';
+        <h2>Bir Mesaj Bırak!</h2>
+        <textarea id="message-box" placeholder="Bir mesaj bırakın..."></textarea>
+        <button onclick="saveMessage()">Mesajı Gönder</button>
+
+        <div id="saved-message"></div>
+
+        <button onclick="toggleMusic()">Müziği Başlat/Durdur</button>
+    </div>
+
+    <script>
+        // Müzik açma/kapama fonksiyonu
+        function toggleMusic() {
+            var music = document.getElementById('background-music');
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
         }
-      })
-      .catch(error => console.error('Error:', error));
-    });
-  </script>
+
+        // Mesaj kaydetme fonksiyonu
+        function saveMessage() {
+            var message = document.getElementById('message-box').value;
+            if (message) {
+                document.getElementById('saved-message').innerText = "Bana gönderdiğiniz mesaj: " + message;
+                document.getElementById('message-box').value = '';  // Mesajı temizle
+            } else {
+                alert("Lütfen bir mesaj yazın!");
+            }
+        }
+    </script>
 </body>
 </html>
