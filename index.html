@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Veri Yönetimi</title>
+    <title>GitHub API ile Anıları Okuma</title>
     <style>
         /* Basit stil */
         body {
@@ -12,25 +12,13 @@
             padding: 20px;
             background-color: #f9f9f9;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #45a049;
+        h2 {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>GitHub API ile Anı Ekleme</h1>
-    <p>Yeni bir anı eklemek için aşağıya yazın:</p>
-    <input type="text" id="anil-input" placeholder="Yeni bir anı ekle" />
-    <button onclick="anilEkle()">Anı Ekle</button>
-
+    <h1>GitHub'dan Anıları Görüntüle</h1>
     <h2>Mevcut Anılar:</h2>
     <ul id="anilar-listesi"></ul>
 
@@ -38,17 +26,20 @@
         const username = 'Berkebsrn';  // GitHub kullanıcı adınız
         const repo = 'Birlikte-Hatirlayalim';           // Repository adınız
         const filePath = 'anilar.json';       // JSON dosyanızın yolu
-        const token = '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'; // GitHub kişisel erişim token'ınız (API için)
 
-        // Anıları JSON dosyasından okuma
+        // Anıları GitHub'dan okuma
         async function anilYukle() {
             const url = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`;
             const response = await fetch(url);
+
+            // Dosya verisini al
             const data = await response.json();
 
+            // Base64 çözme
             const content = atob(data.content);
             const jsonData = JSON.parse(content);
 
+            // Anıları ekrana yazdır
             const anilarListesi = document.getElementById('anilar-listesi');
             anilarListesi.innerHTML = '';
 
@@ -57,47 +48,6 @@
                 li.textContent = anil;
                 anilarListesi.appendChild(li);
             });
-        }
-
-        // Anı ekleme
-        async function anilEkle() {
-            const anilText = document.getElementById('anil-input').value;
-            if (anilText.trim()) {
-                const url = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`;
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `token ${token}`
-                    }
-                });
-
-                const data = await response.json();
-                const content = atob(data.content);
-                const jsonData = JSON.parse(content);
-
-                jsonData.anilar.push(anilText);
-
-                const updatedContent = btoa(JSON.stringify(jsonData));
-                const commitMessage = 'Yeni anı eklendi';
-
-                const updateResponse = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: commitMessage,
-                        content: updatedContent,
-                        sha: data.sha
-                    })
-                });
-
-                if (updateResponse.ok) {
-                    alert('Anı başarıyla eklendi!');
-                    anilYukle();  // Anıları tekrar yükleyin
-                }
-            }
         }
 
         // Sayfa yüklendiğinde anıları göster
