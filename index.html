@@ -1,115 +1,112 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Anıları</title>
-    <style>
-        /* Genel stil */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Başlık */
-        h1 {
-            text-align: center;
-            color: #4CAF50;
-            padding: 20px;
-            margin: 0;
-            background-color: #333;
-            color: white;
-        }
-
-        /* Anılar Listesi */
-        h2 {
-            text-align: center;
-            margin-top: 20px;
-            color: #333;
-        }
-
-        #anilar-listesi {
-            list-style-type: none;
-            padding: 0;
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        #anilar-listesi li {
-            background-color: #f9f9f9;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 5px;
-            border-left: 5px solid #4CAF50;
-            transition: background-color 0.3s;
-        }
-
-        #anilar-listesi li:hover {
-            background-color: #f1f1f1;
-        }
-
-        /* Arayüz düzenlemeleri */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .message {
-            text-align: center;
-            margin-top: 20px;
-            color: #FF5722;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Özel Anlar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #f7a1b5;
+      padding: 10px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+    }
+    .container {
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-size: 18px;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 5px;
+    }
+    .form-group button {
+      background-color: #f7a1b5;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .form-group button:hover {
+      background-color: #f28795;
+    }
+    .timeline {
+      margin-top: 30px;
+    }
+    .event {
+      background-color: white;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .event h3 {
+      margin: 0;
+    }
+    .event p {
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
-    <h1>GitHub'dan Anılar</h1>
-    <div class="container">
-        <h2>Mevcut Anılar:</h2>
-        <ul id="anilar-listesi"></ul>
-        <div class="message" id="message"></div>
-    </div>
 
-    <script>
-        const username = 'Berkebsrn';  // GitHub kullanıcı adınız
-        const repo = 'Birlikte-Hatirlayalim';           // Repository adınız
-        const filePath = 'anilar.json';       // JSON dosyanızın yolu
+<header>
+  Sevgilimle Özel Anlar
+</header>
 
-        // Anıları GitHub'dan okuma
-        async function anilYukle() {
-            const url = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`;
-            const response = await fetch(url);
+<div class="container">
+  <h2>Yeni Bir Anı Ekleyin</h2>
+  <div class="form-group">
+    <label for="eventDate">Tarih ve Saat:</label>
+    <input type="datetime-local" id="eventDate">
+  </div>
+  <div class="form-group">
+    <label for="eventDescription">Anı Açıklaması:</label>
+    <textarea id="eventDescription" rows="4"></textarea>
+  </div>
+  <div class="form-group">
+    <button onclick="addEvent()">Ekle</button>
+  </div>
 
-            if (response.ok) {
-                const data = await response.json();
+  <div class="timeline" id="timeline">
+    <h2>Özel Anılar</h2>
+  </div>
+</div>
 
-                // Base64 çözme
-                const content = atob(data.content);
-                const jsonData = JSON.parse(content);
+<script>
+  function addEvent() {
+    var date = document.getElementById('eventDate').value;
+    var description = document.getElementById('eventDescription').value;
+    
+    if (date && description) {
+      var timeline = document.getElementById('timeline');
+      var eventDiv = document.createElement('div');
+      eventDiv.classList.add('event');
+      eventDiv.innerHTML = `<h3>${date}</h3><p>${description}</p>`;
+      timeline.appendChild(eventDiv);
 
-                // Anıları ekrana yazdır
-                const anilarListesi = document.getElementById('anilar-listesi');
-                anilarListesi.innerHTML = ''; // Listeyi temizle
+      // Clear the inputs
+      document.getElementById('eventDate').value = '';
+      document.getElementById('eventDescription').value = '';
+    } else {
+      alert("Lütfen tüm alanları doldurun.");
+    }
+  }
+</script>
 
-                jsonData.anilar.forEach(anil => {
-                    const li = document.createElement('li');
-                    li.textContent = anil;
-                    anilarListesi.appendChild(li);
-                });
-            } else {
-                // Hata mesajı
-                const message = document.getElementById('message');
-                message.textContent = 'Veriler alınırken bir hata oluştu.';
-            }
-        }
-
-        // Sayfa yüklendiğinde anıları göster
-        window.onload = anilYukle;
-    </script>
 </body>
 </html>
