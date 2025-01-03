@@ -3,197 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birlikte Hatırlayalım</title>
+    <title>GitHub Veri Yönetimi</title>
     <style>
-        /* Genel stil ayarları */
+        /* Basit stil */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
             margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #ff6f61;
-            color: white;
-            text-align: center;
             padding: 20px;
+            background-color: #f9f9f9;
         }
-
-        h1 {
-            font-size: 2.5em;
-        }
-
-        nav ul {
-            list-style-type: none;
-            text-align: center;
-            padding: 10px;
-            background-color: #333;
-        }
-
-        nav ul li {
-            display: inline;
-            margin: 0 15px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.2em;
-        }
-
-        section {
-            margin: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
         button {
-            background-color: #ff6f61;
+            background-color: #4CAF50;
             color: white;
-            border: none;
             padding: 10px 20px;
-            font-size: 1.2em;
+            border: none;
             cursor: pointer;
             border-radius: 5px;
         }
-
         button:hover {
-            background-color: #e55a50;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #333;
-            color: white;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Birlikte Hatırlayalım</h1>
-        <p>Birlikte geçirdiğimiz her anı, her gülüşü ve her anı hatırlayalım.</p>
-    </header>
+    <h1>GitHub API ile Anı Ekleme</h1>
+    <p>Yeni bir anı eklemek için aşağıya yazın:</p>
+    <input type="text" id="anil-input" placeholder="Yeni bir anı ekle" />
+    <button onclick="anilEkle()">Anı Ekle</button>
 
-    <nav>
-        <ul>
-            <li><a href="#anilar">Anılar</a></li>
-            <li><a href="#sürprizler">Sürprizler</a></li>
-            <li><a href="#takvim">Takvim</a></li>
-        </ul>
-    </nav>
-
-    <section id="anilar">
-        <h2>Anılar</h2>
-        <p>İlk buluşmamız, özel anlarımız burada!</p>
-        <ul id="anilar-listesi"></ul>
-
-        <!-- Anı Ekleme Formu -->
-        <input type="text" id="anil-text" placeholder="Yeni bir anı ekle">
-        <button onclick="anilEkle()">Anı Ekle</button>
-    </section>
-
-    <section id="sürprizler">
-        <h2>Sürprizler</h2>
-        <button onclick="rastgeleMesaj()">Rastgele Sürpriz Mesaj</button>
-        <p id="mesaj"></p>
-    </section>
-
-    <section id="takvim">
-        <h2>Özel Gün Takvimi</h2>
-        <ul>
-            <li><strong>Yıldönümü:</strong> 14.02.2025</li>
-            <li><strong>Sevgililer Günü:</strong> 14.02.2025</li>
-        </ul>
-    </section>
-
-    <footer>
-        <p>&copy; 2025 Birlikte Hatırlayalım</p>
-    </footer>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <h2>Mevcut Anılar:</h2>
+    <ul id="anilar-listesi"></ul>
 
     <script>
-        // Firebase yapılandırma kodu
-        const firebaseConfig = {
-            apiKey: "AIzaSyDYenw2_QDkc-pUeH5Im5AqeVCk4s30xpY",
-            authDomain: "birlikte-hatirlayalim-ab65b.firebaseapp.com",
-            projectId: "birlikte-hatirlayalim-ab65b",
-            storageBucket: "birlikte-hatirlayalim-ab65b.firebasestorage.app",
-            messagingSenderId: "544366223351",
-            appId: "1:544366223351:web:102910907c64ed2fe698f2"
-        };
+        const username = 'KULLANICI_ADINIZ';  // GitHub kullanıcı adınız
+        const repo = 'REPO_ADINIZ';           // Repository adınız
+        const filePath = 'anilar.json';       // JSON dosyanızın yolu
+        const token = 'GITHUB_PERSONAL_ACCESS_TOKEN'; // GitHub kişisel erişim token'ınız (API için)
 
-        // Firebase'i başlat
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // Anıları JSON dosyasından okuma
+        async function anilYukle() {
+            const url = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`;
+            const response = await fetch(url);
+            const data = await response.json();
 
-        // Anıları yükle
-        function anilYukle() {
+            const content = atob(data.content);
+            const jsonData = JSON.parse(content);
+
             const anilarListesi = document.getElementById('anilar-listesi');
             anilarListesi.innerHTML = '';
 
-            db.collection("anilar").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const li = document.createElement('li');
-                    li.textContent = doc.data().anil;
-                    const silButton = document.createElement('button');
-                    silButton.textContent = 'Sil';
-                    silButton.onclick = () => anilSil(doc.id);
-                    li.appendChild(silButton);
-                    anilarListesi.appendChild(li);
-                });
+            jsonData.anilar.forEach(anil => {
+                const li = document.createElement('li');
+                li.textContent = anil;
+                anilarListesi.appendChild(li);
             });
         }
 
-        // Anı Ekleme
-        function anilEkle() {
-            const anilText = document.getElementById('anil-text').value;
-            if (anilText) {
-                db.collection("anilar").add({
-                    anil: anilText
-                }).then(() => {
-                    document.getElementById('anil-text').value = '';
-                    anilYukle();
+        // Anı ekleme
+        async function anilEkle() {
+            const anilText = document.getElementById('anil-input').value;
+            if (anilText.trim()) {
+                const url = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${token}`
+                    }
                 });
+
+                const data = await response.json();
+                const content = atob(data.content);
+                const jsonData = JSON.parse(content);
+
+                jsonData.anilar.push(anilText);
+
+                const updatedContent = btoa(JSON.stringify(jsonData));
+                const commitMessage = 'Yeni anı eklendi';
+
+                const updateResponse = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: commitMessage,
+                        content: updatedContent,
+                        sha: data.sha
+                    })
+                });
+
+                if (updateResponse.ok) {
+                    alert('Anı başarıyla eklendi!');
+                    anilYukle();  // Anıları tekrar yükleyin
+                }
             }
         }
 
-        // Anı Silme
-        function anilSil(id) {
-            db.collection("anilar").doc(id).delete().then(() => {
-                anilYukle();
-            });
-        }
-
-        // Rastgele mesaj fonksiyonu
-        function rastgeleMesaj() {
-            const mesajlar = [
-                "Sonsuza kadar birlikte olacağız!",
-                "Birlikte geçirdiğimiz her an çok değerli!",
-                "Seninle her şey daha güzel!",
-                "Hayatımda olduğun için şanslıyım!",
-                "Birlikte her şey mümkün!"
-            ];
-
-            const rastgeleIndex = Math.floor(Math.random() * mesajlar.length);
-            const mesajElementi = document.getElementById('mesaj');
-            mesajElementi.textContent = mesajlar[rastgeleIndex];
-        }
-
-        // Sayfa yüklendiğinde anıları getir
-        window.onload = function() {
-            anilYukle();
-        };
+        // Sayfa yüklendiğinde anıları göster
+        window.onload = anilYukle;
     </script>
 </body>
 </html>
