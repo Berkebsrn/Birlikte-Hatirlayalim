@@ -81,20 +81,37 @@
         <h1>Sevgilim İçin Özel Sayfa</h1>
         <button id="loveButton">Sana Bir Sözüm Var!</button>
         <div id="messageArea" class="hidden">
-            <p id="loveMessage">Seni Seviyorum!</p>
+            <p id="loveMessage"></p>
             <div class="dates">
                 <h3>Önemli Tarihler</h3>
                 <ul>
-                    <li>Tanıştık: <span id="date1">01/01/2022</span></li>
-                    <li>İlk Buluşmamız: <span id="date2">14/02/2022</span></li>
-                    <li>İlk İltifatım: <span id="date3">20/03/2022</span></li>
+                    <li>Tanıştığımız Gün: <span id="date1">20 Aralık 2024 19:03</span></li>
+                    <li>Sevgili Olduğumuz Gün: <span id="date2">27 Aralık 2024 20:05</span></li>
+                    <li>Sevgilimin Doğum Günü: <span id="date3">20 Haziran 2009</span></li>
+                    <li>Benim Doğum Günüm: <span id="date4">10 Haziran</span></li>
+                    <li>İlk Buluştuğumuz Gün: <span id="date5">28 Aralık 2024 15:07</span></li>
                 </ul>
             </div>
         </div>
     </div>
 
     <script>
+        const romanticMessages = [
+            "Sonsuza kadar seninle olmayı hayal ediyorum.",
+            "Sana her baktığımda, bir ömre bedel bir sevgi görüyorum.",
+            "Seninle her an daha güzel, her an daha değerli.",
+            "Sana her gün daha fazla aşık oluyorum.",
+            "Hayatımda senin gibi birini bulduğum için şükrediyorum.",
+            "Seninle olmak, dünyanın en güzel yeri gibidir.",
+            "Birlikte geçirdiğimiz her an, bir ömür boyu unutulmaz.",
+            "Seninle her şey daha parlak, her şey daha güzel.",
+            "Seninle geçirdiğim her saniye, bir ömür kadar değerli.",
+            "Beni seninle daha iyi hissediyorum, seninle daha güçlü hissediyorum."
+        ];
+
         document.getElementById('loveButton').addEventListener('click', function() {
+            const randomMessage = romanticMessages[Math.floor(Math.random() * romanticMessages.length)];
+            document.getElementById('loveMessage').textContent = randomMessage;
             document.getElementById('messageArea').classList.remove('hidden');
         });
     </script>
