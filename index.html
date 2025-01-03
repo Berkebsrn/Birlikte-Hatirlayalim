@@ -4,109 +4,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Özel Anlar</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #f7a1b5;
-      padding: 10px;
-      text-align: center;
-      color: white;
-      font-size: 24px;
-    }
-    .container {
-      padding: 20px;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      font-size: 18px;
-    }
-    .form-group input, .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin-top: 5px;
-    }
-    .form-group button {
-      background-color: #f7a1b5;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .form-group button:hover {
-      background-color: #f28795;
-    }
-    .timeline {
-      margin-top: 30px;
-    }
-    .event {
-      background-color: white;
-      border-radius: 5px;
-      padding: 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
-    .event h3 {
-      margin: 0;
-    }
-    .event p {
-      margin: 5px 0;
-    }
-  </style>
 </head>
 <body>
-
-<header>
-  Sevgilimle Özel Anlar
-</header>
-
-<div class="container">
   <h2>Yeni Bir Anı Ekleyin</h2>
-  <div class="form-group">
+  <form id="eventForm">
     <label for="eventDate">Tarih ve Saat:</label>
-    <input type="datetime-local" id="eventDate">
-  </div>
-  <div class="form-group">
-    <label for="eventDescription">Anı Açıklaması:</label>
-    <textarea id="eventDescription" rows="4"></textarea>
-  </div>
-  <div class="form-group">
-    <button onclick="addEvent()">Ekle</button>
-  </div>
-
-  <div class="timeline" id="timeline">
-    <h2>Özel Anılar</h2>
-  </div>
-</div>
-
-<script>
-  function addEvent() {
-    var date = document.getElementById('eventDate').value;
-    var description = document.getElementById('eventDescription').value;
+    <input type="datetime-local" id="eventDate" required><br><br>
     
-    if (date && description) {
-      var timeline = document.getElementById('timeline');
-      var eventDiv = document.createElement('div');
-      eventDiv.classList.add('event');
-      eventDiv.innerHTML = `<h3>${date}</h3><p>${description}</p>`;
-      timeline.appendChild(eventDiv);
+    <label for="description">Açıklama:</label>
+    <textarea id="description" required></textarea><br><br>
+    
+    <button type="submit">Ekle</button>
+  </form>
 
-      // Clear the inputs
-      document.getElementById('eventDate').value = '';
-      document.getElementById('eventDescription').value = '';
-    } else {
-      alert("Lütfen tüm alanları doldurun.");
-    }
-  }
-</script>
+  <script>
+    document.getElementById("eventForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Formun normal şekilde gönderilmesini engelle
 
+      var eventDate = document.getElementById('eventDate').value;
+      var description = document.getElementById('description').value;
+
+      // Backend API'ye veri gönder
+      fetch('https://your-backend-url.herokuapp.com/add_event.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventDate: eventDate,
+          description: description
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message || data.error);
+        if (data.message) {
+          document.getElementById('eventDate').value = '';
+          document.getElementById('description').value = '';
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  </script>
 </body>
 </html>
