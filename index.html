@@ -13,51 +13,55 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #000, #333); /* Gradient arka plan */
-            color: #fff; /* Beyaz metin rengi */
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Modern gradient background */
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-attachment: fixed;
+            overflow: hidden;
         }
 
         .container {
             text-align: center;
-            padding: 30px;
-            background-color: rgba(34, 34, 34, 0.8); /* Yarı saydam koyu gri arka plan */
+            padding: 40px;
+            background-color: rgba(34, 34, 34, 0.8);
             border-radius: 20px;
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
-            width: 90%; /* Genişlik %90 */
+            width: 90%;
             max-width: 450px;
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out, opacity 0.5s ease;
         }
 
         .container:hover {
-            transform: scale(1.05); /* Hoverda büyüme efekti */
+            transform: scale(1.05); 
         }
 
         h1 {
-            color: #e40046;
-            font-size: 30px;
+            color: #E74C3C;
+            font-size: 36px;
             margin-bottom: 20px;
             font-weight: 700;
+            animation: fadeIn 1s ease-out;
         }
 
         button {
-            background-color: #e40046;
+            background-color: #E74C3C;
             color: #fff;
             font-size: 18px;
             padding: 15px 35px;
             border: none;
-            border-radius: 30px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         button:hover {
-            background-color: #c30039;
-            transform: scale(1.1); /* Hoverda buton büyümesi */
+            background-color: #C0392B;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
         }
 
         .hidden {
@@ -66,11 +70,12 @@
 
         #messageArea {
             margin-top: 30px;
+            animation: slideIn 1s ease-out;
         }
 
         #loveMessage {
             font-size: 24px;
-            color: #e40046;
+            color: #E74C3C;
             font-weight: bold;
             margin-bottom: 20px;
         }
@@ -83,11 +88,41 @@
         .dates li {
             font-size: 18px;
             margin: 10px 0;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        .dates li:nth-child(odd) {
+            animation-delay: 0.5s;
+        }
+
+        .dates li:nth-child(even) {
+            animation-delay: 1s;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         @media (max-width: 600px) {
             h1 {
-                font-size: 24px;
+                font-size: 30px;
             }
 
             button {
@@ -106,7 +141,7 @@
 
         @media (max-width: 400px) {
             h1 {
-                font-size: 20px;
+                font-size: 24px;
             }
 
             button {
