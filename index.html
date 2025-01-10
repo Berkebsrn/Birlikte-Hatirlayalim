@@ -13,42 +13,51 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #000; /* Siyah arka plan */
+            background: linear-gradient(135deg, #000, #333); /* Gradient arka plan */
             color: #fff; /* Beyaz metin rengi */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            background-attachment: fixed;
         }
 
         .container {
             text-align: center;
-            padding: 20px;
-            background-color: #222; /* Koyu gri arka plan */
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            width: 400px;
+            padding: 30px;
+            background-color: rgba(34, 34, 34, 0.8); /* Yarı saydam koyu gri arka plan */
+            border-radius: 20px;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+            width: 90%; /* Genişlik %90 */
+            max-width: 450px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            transform: scale(1.05); /* Hoverda büyüme efekti */
         }
 
         h1 {
             color: #e40046;
-            font-size: 24px;
+            font-size: 30px;
             margin-bottom: 20px;
+            font-weight: 700;
         }
 
         button {
             background-color: #e40046;
             color: #fff;
             font-size: 18px;
-            padding: 15px 30px;
+            padding: 15px 35px;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         button:hover {
             background-color: #c30039;
+            transform: scale(1.1); /* Hoverda buton büyümesi */
         }
 
         .hidden {
@@ -56,11 +65,11 @@
         }
 
         #messageArea {
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         #loveMessage {
-            font-size: 22px;
+            font-size: 24px;
             color: #e40046;
             font-weight: bold;
             margin-bottom: 20px;
@@ -68,11 +77,50 @@
 
         .dates ul {
             list-style-type: none;
+            padding-left: 0;
         }
 
         .dates li {
             font-size: 18px;
-            margin: 5px 0;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 12px 30px;
+            }
+
+            #loveMessage {
+                font-size: 20px;
+            }
+
+            .dates li {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px 25px;
+            }
+
+            #loveMessage {
+                font-size: 18px;
+            }
+
+            .dates li {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -84,12 +132,8 @@
             <p id="loveMessage"></p>
             <div class="dates">
                 <h3>Önemli Tarihler</h3>
-                <ul>
-                    <li>Tanıştığımız Gün: <span id="date1">20 Aralık 2024 19:03</span></li>
-                    <li>Sevgili Olduğumuz Gün: <span id="date2">27 Aralık 2024 20:05</span></li>
-                    <li>Sevgilimin Doğum Günü: <span id="date3">20 Haziran 2009</span></li>
-                    <li>Benim Doğum Günüm: <span id="date4">10 Haziran</span></li>
-                    <li>İlk Buluştuğumuz Gün: <span id="date5">28 Aralık 2024 15:07</span></li>
+                <ul id="importantDatesList">
+                    <!-- Dinamik olarak buraya tarihler eklenecek -->
                 </ul>
             </div>
         </div>
@@ -114,6 +158,21 @@
             document.getElementById('loveMessage').textContent = randomMessage;
             document.getElementById('messageArea').classList.remove('hidden');
         });
+
+        // JSON dosyasını GitHub'dan çekip tarihleri dinamik olarak ekle
+        fetch('https://raw.githubusercontent.com/Berkebsrn/Birlikte-Hatirlayalim/main/important_dates.json')
+            .then(response => response.json())
+            .then(data => {
+                const importantDatesList = document.getElementById('importantDatesList');
+                data.dates.forEach(date => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `${date.label}: <span>${date.date}</span>`;
+                    importantDatesList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('JSON dosyası alınırken bir hata oluştu:', error);
+            });
     </script>
 </body>
 </html>
